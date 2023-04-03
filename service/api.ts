@@ -10,7 +10,7 @@ import { useAuthStore } from "~~/store/auth";
 import { useLoading } from "~~/store/loading";
 
 export const api = axios.create({
-  baseURL: "/api",
+  baseURL: "https://api-irrigiot.patogordo.dev/api",
 });
 
 api.interceptors.response.use(

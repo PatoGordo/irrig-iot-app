@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({
+  middleware: "needed-auth",
   pageTransition: {
     name: "slide-fade",
     mode: "out-in",
