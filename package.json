@@ -60,6 +60,7 @@
     "limiter": "^2.1.0",
     "memory-cache": "^0.2.0",
     "moment": "^2.29.4",
+    "mqtt": "^4.3.7",
     "nodemailer": "^6.8.0",
     "pinia-plugin-persistedstate": "^2.3.0",
     "prettier": "^2.7.1",
