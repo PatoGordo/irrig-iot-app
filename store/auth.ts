@@ -157,13 +157,5 @@ export const useAuthStore = defineStore("auth", {
       } catch (err) {}
     },
   },
-  persist: {
-    ...(() => {
-      if (process.browser) {
-        return {
-          storage: localStorage,
-        };
-      }
-    })(),
-  },
+  persist: true,
 });
