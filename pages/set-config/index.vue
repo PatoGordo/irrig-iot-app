@@ -34,6 +34,8 @@ const handleChangeSettings = async () => {
 
       loading.close();
 
+      client.end();
+
       router.push("/dashboard");
     } catch (error) {
       console.log(error);
