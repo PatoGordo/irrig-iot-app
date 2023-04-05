@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import * as mqtt from "mqtt/dist/mqtt.min";
+import { endianness } from "os";
+import { handleError } from "vue";
 
 import {
   url,
@@ -8,13 +10,39 @@ import {
   SUB_TOPIC_DEVICE_FAILURE,
   SUB_TOPIC_DEVICE_ON_OFF,
 } from "~/service/mqtt";
+import { api } from "~~/service/api";
+import { useLoading } from "~~/store/loading";
 
 const humidity = ref("-- ");
 const isOn = ref(false);
 
 const router = useRouter();
 
-onMounted(() => {
+const turnOn = ref(0);
+const turnOff = ref(0);
+
+const loading = useLoading();
+
+const getValues = async () => {
+  try {
+    loading.open();
+
+    loading.hint = "Recuperando configuração...";
+
+    const res = await api.get("/config/find-last");
+
+    turnOn.value = res.data.result.turn_on;
+    turnOff.value = res.data.result.turn_off;
+
+    loading.close();
+  } catch (error) {
+    console.error(error);
+
+    loading.close();
+  }
+};
+
+onMounted(async () => {
   const client = mqtt.connect(url, options);
 
   client.on("connect", function () {
@@ -46,6 +74,8 @@ onMounted(() => {
       console.log("[FAILURE] ->", msg);
     }
   });
+
+  await getValues();
 });
 
 definePageMeta({
@@ -130,11 +160,11 @@ definePageMeta({
         <small><i>Não de intenet para funcionar</i></small>
         <span class="flex items-center justify-between flex-wrap mt-3">
           <span>Ligar se umidade menor que: </span>
-          <span class="font-semibold">30%</span>
+          <span class="font-semibold">{{ turnOn }}%</span>
         </span>
         <span class="flex items-center justify-between flex-wrap">
           <span>Desligar se umidade maior que: </span>
-          <span class="font-semibold">90%</span>
+          <span class="font-semibold">{{ turnOff }}%</span>
         </span>
       </div>
 
